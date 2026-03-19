@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Detalhes</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+
+</head>
+<body>
+    <div class="detalhes-container">
+        <img src="https://image.tmdb.org/t/p/w500{{ filme.poster_path }}" alt="{{ filme.title }}">
+        
+        <div class="info-filme">
+            <h1>{{ filme.title }}</h1>
+            <p class="frase">"{{ filme.tagline }}"</p>
+            <p class="nota">⭐ {{ '%.1f'|format(filme.vote_average) }}</p>
+            <p class="sinopse">{{ filme.overview }}</p> <p><strong>Gênero:</strong> {{ filme.genres | map(attribute='name') | join(', ') }}</p>
+            <p><strong>Duração:</strong> {{ filme.runtime }} minutos</p>
+            <p><strong>Lançamento:</strong> {{ filme.release_date }}</p>
+            <br>
+            <a href="/" style="color: bisque;">← Voltar para a busca</a>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,110 @@
+body {
+    background-color: #141414;
+    color: rgba(216, 216, 216, 0.712);
+    font-family: 'Arial', sans-serif;
+    text-align: center;
+    margin: 0;
+    padding: 20px;
+}
+
+.nome {
+    font-size: large;
+    margin: 10px auto;
+    width: 280px;
+}
+
+.pesquisar {
+    background-color: #222;
+    padding: 10px;
+    border-radius: 8px;
+    width: 300px;
+    margin: 20px auto;
+    display: block;
+}
+
+.pesquisar form {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+}
+
+/* Exemplo de como organizar os cards */
+.container-filmes {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    gap: 30px;
+    padding: 40px;
+    justify-content: center; /* Isso centraliza os cards no meio da tela */
+    max-width: 1200px;       /* Opcional: evita que os cards fiquem longe demais em telas gigantes */
+    margin: 0 auto;          /* Centraliza o container inteiro na página */
+}
+
+.card-filme {
+    background-color: #222;
+    padding: 10px;
+    border-radius: 8px;
+    transition: transform 0.3s;
+}
+
+.card-filme:hover {
+    transform: scale(1.05);
+    background-color: #333;
+}
+
+.card-filme img {
+    width: 100%;
+    border-radius: 5px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.5);
+}
+
+.card-filme h3 {
+    font-size: 0.9rem;
+    margin-top: 10px;
+    height: 40px;
+    overflow: hidden;
+    color: bisque;
+}
+
+.nota {
+    color: #ffbd00;
+    font-weight: bold;
+    margin: 5px 0;
+}
+
+.sinopse {
+    font-size: 0.75rem;
+    color: #bbb;
+    line-height: 1.2;
+    min-height: 70px;
+}
+
+/* Container exclusivo para os detalhes */
+.detalhes-container {
+    max-width: 900px;
+    margin: 50px auto;
+    display: flex; /* Coloca imagem de um lado e texto do outro */
+    gap: 40px;
+    background-color: #222;
+    padding: 30px;
+    border-radius: 15px;
+    text-align: left; /* Texto alinhado à esquerda fica mais profissional */
+}
+
+/* Tamanho controlado para a imagem de destaque */
+.detalhes-container img {
+    width: 350px;
+    border-radius: 10px;
+    box-shadow: 0 10px 20px rgba(0,0,0,0.5);
+}
+
+.info-filme {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.frase {
+    font-style: italic;
+    color: #ffbd00;
+    margin-bottom: 20px;
+}

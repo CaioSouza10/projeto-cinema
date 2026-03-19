@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CINEPY</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <h1 class="titulo-principal">CINEPY</h1>
+    <p class="nome">Olá, {{nome_usuario}}</p>
+    <div class="pesquisar">   
+        <form action="/buscar" method="POST">
+            <input name="filme" placeholder="Digite o nome do filme"></input>
+            <button type="submit">Pesquisar</button>
+        </form>
+    </div>
+    <div class="container-filmes">
+        {% for filme in filmes %}
+            <div class="card-filme">
+                <img src="https://image.tmdb.org/t/p/w500{{ filme.poster_path }}" alt="{{ filme.title }}">
+                <h3>{{ filme.title }}</h3>
+                <p class="nota">⭐ {{ '%.1f'|format(filme.vote_average) }}</p>
+                <p class="sinopse">{{ filme.overview[:100] }}...</p>
+                <a href="/filme/{{ filme.id }}">
+                    <button>Ver Detalhes</button>
+                </a>
+            </div>
+        {% endfor %}
+    </div>
+</body>
+</html>

@@ -1,0 +1,64 @@
+Criar a pasta do arquivo
+Criar o ambiente venv (python -m venv venv)
+Ativar o ambiente virtual (.\venv\Scripts\activate)
+Instalar o flask dentro do ambiente (pip install flask)
+
+Após criar o arquivo app.py, o código inicial para ligação com o front será:
+
+from flask import Flask
+
+app = Flask(__name__)
+@app.route('/')
+
+def index():
+    return "<h1>Meu site está On!</h1>"
+if __name__ == '__main__':
+    app.run(debug=True)
+
+para acessar o site, rodar: python app.py
+
+ 
+
+O Flask exige uma organização específica para saber onde encontrar cada arquivo:
+
+app.py: O "cérebro". Contém as rotas e a lógica Python.
+
+templates/: Pasta obrigatória para arquivos HTML.
+
+static/: Pasta para arquivos que não mudam (CSS, Imagens, JS).
+
+venv/: O ambiente isolado onde instalamos o Flask e a biblioteca Requests. 
+
+
+
+HTML:
+
+`url_for: É uma função do Flask. Em vez de você escrever o caminho do arquivo na mão, você pede ao Flask: "Busque na pasta static o arquivo style.css". Isso evita erros se você mudar o site de servidor no futuro.`
+
+
+`{{ nome_usuario }}: As chaves duplas são usadas para exibir algo que veio do Python. No seu app.py, você passou nome_usuario='Caio', então o Jinja2 substitui esse código pelo texto "Caio" antes de enviar para o seu navegador.`
+    <p>Olá, {{nome_usuario}}</p>
+
+
+ `action="/buscar": Diz ao navegador: "Quando o botão for clicado, mande os dados para a rota /buscar lá no Python".`
+    `method="POST": É o modo de envio "seguro" e padrão para formulários.`
+    `name="filme": Esse é o ID do dado. No Python, você usa request.form.get('filme') para pegar o que foi digitado aqui. Sem o name, o Python não acha o texto.`
+    <form action="/buscar" method="POST">
+        <input name="filme">
+        </input>    
+
+
+ `{% for filme in filmes %}: Aqui é onde a mágica acontece. O Python enviou uma lista de dicionários chamada filmes. O HTML vai repetir tudo o que estiver dentro desse bloco para cada filme que existir na lista.`
+        `Se a lista tiver 20 filmes, ele criará 20 divs de classe card-filme automaticamente.`
+        {% for filme in filmes %}
+            <div class="card-filme">
+                `O TMDB não manda a URL inteira, só o final dela (ex: /abc.jpg). Nós colamos o início da URL oficial deles com o código do pôster.`
+                <img src="https://image.tmdb.org/t/p/w500{{ filme.poster_path }}" alt="{{ filme.title }}">
+                <h3>{{ filme.title }}</h3>
+                `O símbolo | (pipe) é um filtro. Ele pega a nota (ex: 8.445) e formata para ter apenas 1 casa decimal.`
+                <p class="nota">⭐ {{ '%.1f'|format(filme.vote_average) }}</p>
+                `Como algumas sinopses são enormes, o [:100] diz ao Python: "Pegue apenas os primeiros 100 caracteres". Isso mantém seus cards alinhados.`
+                <p class="sinopse">{{ filme.overview[:100] }}...</p>
+            </div>
+        {% endfor %}
+        `Sempre que abrir um {% for %}, você é obrigado a fechar com um {% endfor %}.`  
