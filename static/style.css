@@ -26,6 +26,28 @@ body {
     display: flex;
     justify-content: center;
     gap: 10px;
+
+}
+
+.filtros {
+    padding: 20px;
+    display: flex;         /* Coloca os itens lado a lado */
+    justify-content: center; /* Centraliza a barra no meio da tela */
+    gap: 20px;             /* Dá um espaço entre cada link */
+    border-bottom: 1px solid #333; /* Uma linha discreta embaixo da barra */
+    margin-bottom: 20px;
+}
+
+.filtros a {
+    text-decoration: none; /* Tira aquele sublinhado feio do link */
+    color: #ffbd00;        /* A cor amarela que você quer */
+    font-weight: bold;
+    transition: 0.3s;      /* Faz o efeito de passar o mouse ser suave */
+}
+
+.filtros a:hover {
+    color: white;          /* Quando passar o mouse, o link brilha em branco */
+    transform: scale(1.1); /* Dá um leve zoom ao passar o mouse */
 }
 
 /* Exemplo de como organizar os cards */
@@ -76,6 +98,32 @@ body {
     color: #bbb;
     line-height: 1.2;
     min-height: 70px;
+}
+
+.insight-ia {
+    background: linear-gradient(135deg, #333 0%, #222 100%);
+    border: 1px solid #444;
+    border-left: 5px solid #ffbd00; /* A cor do CinePy */
+    padding: 20px;
+    border-radius: 12px;
+    margin-top: 30px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+}
+
+.insight-ia h4 {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: #ffbd00;
+    font-size: 1.1rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.insight-ia p {
+    line-height: 1.6;
+    color: #eee;
+    font-style: italic;
 }
 
 /* Container exclusivo para os detalhes */

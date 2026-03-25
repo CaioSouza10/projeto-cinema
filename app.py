@@ -2,10 +2,19 @@
 from flask import Flask, render_template, request 
 # Importa a biblioteca para falar com APIs externas
 import requests
+from google import genai
+import os
+from dotenv import load_dotenv
 
+load_dotenv()
 
 # Cria a instância do seu site (o aplicativo)
 app = Flask(__name__)
+
+GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
+TMDB_API_KEY = os.getenv("TMDB_API_KEY")
+
+client = genai.Client(api_key=GEMINI_API_KEY)
 
 '''
 Flask: O motor principal do site.
@@ -23,7 +32,7 @@ import requests: É quem faz a "viagem" até o servidor do TMDB para buscar os f
 def buscar():
     # Captura o texto que o usuário digitou no <input name="filme">
     nome_do_filme = request.form.get('filme')
-    chave_api = '118bc417716a14681a9e0e718b52b16a'
+    chave_api = TMDB_API_KEY
     # Monta o endereço da busca, injetando a chave e o nome do filme na URL
     url = f"https://api.themoviedb.org/3/search/movie?api_key={chave_api}&query={nome_do_filme}&language=pt-BR"
     # Faz a chamada real para a internet
@@ -31,17 +40,18 @@ def buscar():
     # Converte o "textão" que a API manda em um dicionário Python
     dados = resposta.json()
     # Extrai apenas a lista de filmes da chave 'results'
-    print(dados)
-    lista_filmes = dados.get('results', [])
+    filmes = dados.get('results', [])
+    if not filmes:
+        return render_template('index.html', filmes=[], erro="Ops, Não encontramos nenhum filme com esse nome.")
     # Devolve o HTML, mas agora preenchido com os filmes da pesquisa
-    return render_template('index.html', filmes = lista_filmes, nome_usuario ='Caio')
+    return render_template('index.html', filmes=filmes, nome_usuario ='Caio')
 
 
 
 # Define o que acontece ao acessar o endereço base do site
 @app.route('/')
 def index():
-    chave_api = '118bc417716a14681a9e0e718b52b16a'
+    chave_api = TMDB_API_KEY
     # URL diferente: aqui busco os filmes "popular" (em alta)
     url = f'https://api.themoviedb.org/3/movie/popular?api_key={chave_api}&language=pt-BR'
     resposta = requests.get(url)
@@ -51,13 +61,70 @@ def index():
     # Renderiza o mesmo index.html, mas com os filmes populares logo de cara
     return render_template('index.html', filmes=lista_popular, nome_usuario='Caio')
 
+
+
 @app.route('/filme/<int:id_filme>')
 def detalhes(id_filme):
-    chave_api = '118bc417716a14681a9e0e718b52b16a'
+    chave_api = TMDB_API_KEY
     url = f'https://api.themoviedb.org/3/movie/{id_filme}?api_key={chave_api}&language=pt-BR'
     resposta = requests.get(url)
     dados_filmes = resposta.json()
-    return render_template('detalhes.html', filme=dados_filmes)
+    titulo = dados_filmes.get('title')
+    prompt = f'Me conte uma curiosidade muita curta e interessante sobre os bastidores do filme {titulo}. Responda em português-BR e seja direto.'
+    try:
+        # A biblioteca nova prefere esse formato:
+        resposta_ia = client.models.generate_content(
+            model="gemini-flash-latest", 
+            contents=prompt # ou prompt
+        )
+        # IMPORTANTE: Use .text para extrair a string
+        resposta_texto = resposta_ia.text 
+    except Exception as e:
+        print(f"ERRO REAL NO TERMINAL: {e}")
+        resposta_texto = "A IA teve um soluço técnico. Verifique o terminal!"
+    return render_template('detalhes.html', filme=dados_filmes, insight=resposta_texto)
+
+
+
+@app.route('/genero/<int:id_genero>')
+def ver_genero(id_genero):
+    chave_api = TMDB_API_KEY
+    url = f'https://api.themoviedb.org/3/discover/movie?api_key={chave_api}&with_genres={id_genero}&language=pt-BR'
+    resposta = requests.get(url)
+    dados_filmes = resposta.json()
+    filmes_genero = dados_filmes.get('results', [])
+    return render_template('index.html', filmes=filmes_genero, nome_usuario='Caio')
+
+
+@app.route('/pergunta/<int:id_filme>', methods=['POST'])
+def perguntar(id_filme):
+    pergunta = request.form.get('pergunta_usuario')
+    
+    # Buscamos o filme de novo para dar contexto à IA
+    chave_api = TMDB_API_KEY
+    url = f'https://api.themoviedb.org/3/movie/{id_filme}?api_key={chave_api}&language=pt-BR'
+    dados_filmes = requests.get(url).json()
+    titulo = dados_filmes.get('title')
+
+    # Criamos um "Super Prompt" que une o filme + a dúvida do usuário
+    contexto = f"Você é um especialista em cinema. O usuário está vendo o filme {titulo}. Responda à pergunta dele: {pergunta}"
+    
+    try:
+    # A biblioteca nova prefere esse formato:
+        resposta_ia = client.models.generate_content(
+            model="gemini-flash-latest", 
+            contents=contexto # ou prompt
+        )
+        # IMPORTANTE: Use .text para extrair a string
+        resposta_texto = resposta_ia.text 
+    except Exception as e:
+        print(f"ERRO REAL NO TERMINAL: {e}")
+        resposta_texto = "A IA teve um soluço técnico. Verifique o terminal!"
+
+    # Voltamos para a página de detalhes, mas agora levando a resposta do chat
+    return render_template('detalhes.html', filme=dados_filmes, insight=resposta_texto)
+
+
 
 # Garante que o site só rode se este arquivo for executado diretamente
 if __name__ == '__main__':

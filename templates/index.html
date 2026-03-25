@@ -15,10 +15,27 @@
             <button type="submit">Pesquisar</button>
         </form>
     </div>
+    <nav class="filtros">
+        <a href="/genero/27">Terror</a>
+        <a href="/genero/35">Comédia</a>
+        <a href="/genero/28">Ação</a>
+        <a href="/genero/16">Animação</a>
+        <a href="/">Todos (Populares)</a>
+    </nav>
+    {% if erro %}
+        <p style="color: #ffbd00; font-weight: bold; margin-top: 20px">
+            {{ erro }}
+        </p>
+        <a href="/" style="color: bisque; text-decoration: none;">Voltar para populares</a>
+    {% endif %}
     <div class="container-filmes">
         {% for filme in filmes %}
             <div class="card-filme">
-                <img src="https://image.tmdb.org/t/p/w500{{ filme.poster_path }}" alt="{{ filme.title }}">
+                {% if filme.poster_path %}
+                    <img src="https://image.tmdb.org/t/p/w500{{ filme.poster_path }}" alt="{{ filme.title }}">
+                {% else %}
+                    <img src="https://via.placeholder.com/500x750?text=Sem+Imagem" alt="Sem imagem">
+                {% endif %}    
                 <h3>{{ filme.title }}</h3>
                 <p class="nota">⭐ {{ '%.1f'|format(filme.vote_average) }}</p>
                 <p class="sinopse">{{ filme.overview[:100] }}...</p>
@@ -26,6 +43,10 @@
                     <button>Ver Detalhes</button>
                 </a>
             </div>
+        {% else %}
+            {% if not erro %}
+                <p>Pesquise por um filme acima para começar</p>
+            {% endif %}        
         {% endfor %}
     </div>
 </body>
