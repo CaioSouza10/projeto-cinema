@@ -72,10 +72,10 @@ def detalhes(id_filme):
     titulo = dados_filmes.get('title')
     prompt = f'Me conte uma curiosidade muita curta e interessante sobre os bastidores do filme {titulo}. Responda em português-BR e seja direto.'
     try:
-        # A biblioteca nova prefere esse formato:
+        
         resposta_ia = client.models.generate_content(
             model="gemini-flash-latest", 
-            contents=prompt # ou prompt
+            contents=prompt
         )
         # IMPORTANTE: Use .text para extrair a string
         resposta_texto = resposta_ia.text 
@@ -110,7 +110,6 @@ def perguntar(id_filme):
     contexto = f"Você é um especialista em cinema. O usuário está vendo o filme {titulo}. Responda à pergunta dele: {pergunta}"
     
     try:
-    # A biblioteca nova prefere esse formato:
         resposta_ia = client.models.generate_content(
             model="gemini-flash-latest", 
             contents=contexto # ou prompt
