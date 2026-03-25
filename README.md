@@ -1,4 +1,4 @@
-O nome do projeto: PROJETO CINEMA.
+PROJETO CINEMA.
 
 O que ele faz: Simula um site de busca por filmes, utilizando API da IMDB.
 
