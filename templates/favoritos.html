@@ -21,7 +21,6 @@
         <a href="/genero/28">Ação</a>
         <a href="/genero/16">Animação</a>
         <a href="/">Todos (Populares)</a>
-        <a href="{{ url_for('favoritos') }}">⭐ Meus Favoritos</a>
     </nav>
     {% if erro %}
         <p style="color: #ffbd00; font-weight: bold; margin-top: 20px">
@@ -30,24 +29,17 @@
         <a href="/" style="color: bisque; text-decoration: none;">Voltar para populares</a>
     {% endif %}
     <div class="container-filmes">
-        {% for filme in filmes %}
+        {% for filme in filmes_favoritos %}
             <div class="card-filme">
-                {% if filme.poster_path %}
-                    <img src="https://image.tmdb.org/t/p/w500{{ filme.poster_path }}" alt="{{ filme.title }}">
-                {% else %}
-                    <img src="https://via.placeholder.com/500x750?text=Sem+Imagem" alt="Sem imagem">
-                {% endif %}    
-                <h3>{{ filme.title }}</h3>
-                <p class="nota">⭐ {{ '%.1f'|format(filme.vote_average) }}</p>
-                <p class="sinopse">{{ filme.overview[:100] }}...</p>
-                <a href="/filme/{{ filme.id }}">
+                <img src="https://image.tmdb.org/t/p/w500{{ filme.poster }}" alt="{{ filme.titulo }}">
+                <h3>{{ filme.titulo }}</h3>
+                <a href="/filme/{{ filme.id_filme }}">
                     <button>Ver Detalhes</button>
                 </a>
+                <a href="{{ url_for('deletar', id_filme=filme.id_filme) }}" style="color: #ff4d4d; text-decoration: none; font-size: 0.8em; margin-top: 10px; display: block;">
+                    🗑️ Remover dos Favoritos
+                </a>
             </div>
-        {% else %}
-            {% if not erro %}
-                <p>Pesquise por um filme acima para começar</p>
-            {% endif %}        
         {% endfor %}
     </div>
 </body>

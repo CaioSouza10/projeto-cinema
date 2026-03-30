@@ -9,9 +9,13 @@
 </head>
 <body>
     <div class="detalhes-container">
-        <img src="https://image.tmdb.org/t/p/w500{{ filme.poster_path }}" alt="{{ filme.title }}">
-        
+        <img src="https://image.tmdb.org/t/p/w500{{ filme.poster_path }}" alt="{{ filme.title }}">   
         <div class="info-filme">
+            <a href="{{ url_for('favorito', id_filme=filme.id) }}" 
+               style="display: inline-block; background: #e74c3c; color: white; padding: 10px 20px; 
+                      border-radius: 5px; text-decoration: none; font-weight: bold; margin-top: 10px;">
+                ❤️ Adicionar aos Favoritos
+            </a>
             <h1>{{ filme.title }}</h1>
             <p class="frase">"{{ filme.tagline }}"</p>
             <p class="nota">⭐ {{ '%.1f'|format(filme.vote_average) }}</p>
